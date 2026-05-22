@@ -960,11 +960,38 @@ function collectData() {
 }
 
 async function submitForm() {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYpQfb6DBdBz3ll_hQt3XPjuGRYD9Clvu6MxnW3eAXyK_6geuubuTp57iTilvK35eh/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWkPMc9q-ykRNd0hxl5IfFJrtBlILwQWkSpULEmWLF-JuqBPalgb9jxNuEB-zxho8G/exec';
   const data = collectData();
-  if (SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') { showToast('✅ [데모] 제출 완료!'); showComplete(); return; }
-  try { showToast('📤 제출 중...'); await fetch(SCRIPT_URL+'?'+new URLSearchParams(data),{method:'GET',mode:'no-cors'}); showComplete(); }
-  catch(e) { showToast('⚠️ 제출 중 오류가 발생했습니다.'); }
+  showToast('📤 제출 중...');
+  try {
+    // iframe 방식 - CORS 우회, 가장 안정적
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = SCRIPT_URL;
+    form.target = 'hidden_iframe';
+    Object.entries(data).forEach(([k,v]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = k;
+      input.value = v;
+      form.appendChild(input);
+    });
+    const iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    document.body.appendChild(form);
+    iframe.onload = () => {
+      document.body.removeChild(form);
+      document.body.removeChild(iframe);
+      showComplete();
+    };
+    form.submit();
+    // iframe onload가 안 될 경우 대비 3초 후 완료 처리
+    setTimeout(() => { showComplete(); }, 3000);
+  } catch(e) {
+    showToast('⚠️ 제출 중 오류가 발생했습니다.');
+  }
 }
 
 function showComplete() {
