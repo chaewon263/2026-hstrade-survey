@@ -944,18 +944,64 @@ function showToast(msg) {
 }
 
 function collectData() {
-  const data = {timestamp:new Date().toISOString(), branch};
+  // 질문 순서 고정 배열
+  const ORDERED_KEYS = [
+    { key: 'q1',   label: 'Q1. 주요 업종' },
+    { key: 'q2a',  label: 'Q2. 종업원 수' },
+    { key: 'q2b',  label: 'Q2. 연간 매출액' },
+    { key: 'q2c',  label: 'Q2. 매출 대비 수출비중' },
+    { key: 'q3a',  label: 'Q3. 수출 경력' },
+    { key: 'q3b',  label: 'Q3. 주요 수출 방식' },
+    { key: 'q4',   label: 'Q4. 현재 주요 수출지역' },
+    { key: 'q5',   label: 'Q5. 해외 거점 보유 여부' },
+    { key: 'q5_1', label: 'Q5-1. 해외 거점 국가/지역' },
+    { key: 'q6',   label: 'Q6. 전년 대비 수출실적' },
+    { key: 'q7',   label: 'Q7. 수출실적 규모(2025)' },
+    { key: 'q8a',  label: 'Q8. 수출 전담인력 유형' },
+    { key: 'q8b',  label: 'Q8. 수출 전담 인원' },
+    { key: 'q8c',  label: 'Q8. 인력 충분성' },
+    { key: 'q10',  label: 'Q10. 향후 진출 희망 시장' },
+    { key: 'q11',  label: 'Q11. 수출 실무 애로사항' },
+    { key: 'q13',  label: 'Q13. 수출지원 이용 기관' },
+    { key: 'q14',  label: 'Q14. 화성시 수출지원사업 이용 경험' },
+    { key: 'q15a', label: 'Q15. 사업 인지 경로' },
+    { key: 'q16',  label: 'Q16. 수출지원사업 도움 정도' },
+    { key: 'q17',  label: 'Q17. 수출지원사업 개선 필요 사항' },
+    { key: 'q19',  label: 'Q19. 미이용 주된 이유' },
+    { key: 'q20',  label: 'Q20. 향후 참여를 위한 개선 사항' },
+    { key: 'q21',  label: 'Q21. 수출지원사업 만족 부분' },
+    { key: 'q22',  label: 'Q22. 확대 희망 사업' },
+    { key: 'q23',  label: 'Q23. 신규 개설 희망 사업' },
+    { key: 'q25',  label: 'Q25. 자유 의견' },
+  ];
+
+  // 선택값 수집
+  const rawData = {};
   document.querySelectorAll('[data-qid]').forEach(c => {
     const qid = c.getAttribute('data-qid');
     const sel = Array.from(c.querySelectorAll('.selected')).map(el=>el.querySelector('.opt-text')?.textContent?.trim()||el.textContent.trim());
-    if (sel.length) data[qid] = sel.join(', ');
+    if (sel.length) rawData[qid] = sel.join(', ');
   });
+
+  // 기타 입력
   ['q1','q11','q15a','q17','q20','q21','q22','q23'].forEach(qid => {
     const w = document.getElementById('other-'+qid);
-    if (w&&w.classList.contains('show')) { const v=w.querySelector('input')?.value?.trim(); if(v) data[qid+'_other']=v; }
+    if (w&&w.classList.contains('show')) {
+      const v = w.querySelector('input')?.value?.trim();
+      if (v) rawData[qid] = (rawData[qid] ? rawData[qid] + ', ' : '') + '기타: ' + v;
+    }
   });
-  data.q5_1 = document.getElementById('q5-1')?.value||'';
-  data.q25 = document.getElementById('q25-text')?.value||'';
+  rawData['q5_1'] = document.getElementById('q5-1')?.value||'';
+  rawData['q25']  = document.getElementById('q25-text')?.value||'';
+
+  // 순서 고정해서 data 객체 생성
+  const data = {};
+  data['제출시각'] = new Date().toLocaleString('ko-KR');
+  data['이용경험구분'] = branch === 'A' ? '이용경험 있음(Q15~Q17)' : '이용경험 없음(Q19~Q20)';
+  ORDERED_KEYS.forEach(({key, label}) => {
+    data[label] = rawData[key] || '';
+  });
+
   return data;
 }
 
