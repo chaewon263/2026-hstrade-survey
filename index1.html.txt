@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026 화성시 통상지원사업 설문조사</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@font-face {
+    font-family: 'Gmarket Sans';
+    font-weight: 700;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+}
+:root{
+  --orange:#FF6B00;--orange-l:#FF8C38;--orange-pale:#FFF3E8;
+  --navy:#1B2E5E;--navy-l:#2A4080;--yellow:#FFB800;
+  --bg:#F9F7F4;--gray:#6B7280;--gray-l:#F3F4F6;--border:#E5E7EB;
+  --red:#EF4444;--red-pale:#FEF2F2;
+  --shadow:0 4px 24px rgba(27,46,94,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:#1F2937;overflow-x:hidden;-webkit-text-size-adjust:100%;}
+
+/* ── HEADER ── */
+.sticky-header{position:sticky;top:0;z-index:100;background:#fff;box-shadow:0 2px 12px rgba(27,46,94,.10);padding:10px 16px 8px;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.header-title{font-family:'Gmarket Sans',sans-serif;font-size:12px;font-weight:700;color:var(--navy);}
+.header-badge{background:var(--orange-pale);color:var(--orange);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1.5px solid #FFD4A8;white-space:nowrap;}
+.section-dots{display:flex;gap:3px;margin-bottom:5px;}
+.section-dot{flex:1;height:4px;border-radius:99px;background:#EEF0F5;transition:background .4s;}
+.section-dot.done{background:var(--orange);}
+.section-dot.active{background:var(--orange-l);animation:pdot 1.2s infinite;}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.5}}
+.progress-track{width:100%;height:7px;background:#EEF0F5;border-radius:99px;overflow:hidden;margin-bottom:5px;}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.progress-text{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);}
+.progress-text .dc{font-weight:700;color:var(--orange);}
+.progress-text .pct{font-family:'Gmarket Sans',sans-serif;font-weight:700;font-size:12px;color:var(--navy);}
+
+/* ── PAGES ── */
+.page{display:none;padding:14px 14px 110px;max-width:680px;margin:0 auto;}
+.page.active{display:block;animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── KORYO ── */
+.koryo-wrap{position:fixed;bottom:50px;left:12px;z-index:200;display:flex;flex-direction:column;align-items:flex-start;gap:4px;}
+.speech-bubble{background:#fff;border:2px solid var(--orange);border-radius:16px 16px 16px 4px;padding:8px 12px;font-size:11.5px;font-weight:700;color:var(--navy);max-width:160px;text-align:center;line-height:1.5;box-shadow:0 4px 14px rgba(255,107,0,.18);opacity:0;transform:translateY(6px) scale(.92);transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+.speech-bubble.show{opacity:1;transform:translateY(0) scale(1);}
+.koryo-circle{width:80px;height:80px;background:#ffffff;border-radius:50%;box-shadow:0 4px 14px rgba(27,46,94,.20);display:flex;align-items:center;justify-content:center;cursor:pointer;animation:float 3s ease-in-out infinite;border:2px solid rgba(255,184,0,0.4);overflow:hidden;}
+.koryo-img{width:70px;height:auto;transition:transform .2s;pointer-events:none;}
+.koryo-circle:hover .koryo-img{transform:scale(1.1) rotate(3deg);}
+.koryo-circle.bounce{animation:breact .45s cubic-bezier(.36,.07,.19,.97) !important;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes breact{0%,100%{transform:scale(1)}25%{transform:scale(1.2) rotate(8deg)}50%{transform:scale(.9) rotate(-5deg)}75%{transform:scale(1.1) rotate(3deg)}}
+
+/* ── CHEER BAR ── */
+.cheer-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(90deg,var(--navy),var(--navy-l));height:40px;display:flex;align-items:center;justify-content:center;z-index:150;}
+.cheer-text{font-size:12px;font-weight:700;color:#fff;opacity:0;transform:translateY(5px);transition:all .5s;position:absolute;text-align:center;padding:0 12px;}
+.cheer-text.show{opacity:1;transform:translateY(0);}
+
+/* ── NAV BUTTONS ── */
+.slide-nav{display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:10px;}
+.btn-prev{display:flex;align-items:center;gap:5px;padding:12px 20px;border:none;border-radius:99px;font-family:'Gmarket Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:#F3F4F6;color:var(--navy);transition:all .2s;min-height:44px;}
+.btn-prev:hover{background:#E5E7EB;}
+.btn-next{display:flex;align-items:center;gap:5px;padding:12px 24px;border:none;border-radius:99px;font-family:'Gmarket Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--orange),var(--orange-l));color:#fff;box-shadow:0 5px 18px rgba(255,107,0,.3);transition:all .2s;min-height:44px;}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(255,107,0,.4);}
+.btn-next:active{transform:translateY(0);}
+
+/* 필수 오류 표시 */
+.required-error{display:none;margin-top:8px;padding:8px 12px;background:var(--red-pale);border:1.5px solid #FCA5A5;border-radius:10px;font-size:12px;color:var(--red);font-weight:600;}
+.required-error.show{display:flex;align-items:center;gap:6px;}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-l) 60%,#3558A8 100%);border-radius:22px;padding:28px 20px 24px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden;}
+.hero-koryo-wrap{display:inline-flex;align-items:center;justify-content:center;width:148px;height:148px;background:#ffffff;border-radius:44% 56% 50% 50% / 42% 42% 58% 58%;box-shadow:0 6px 24px rgba(0,0,0,0.15);margin-bottom:14px;position:relative;z-index:1;overflow:hidden;}
+.hero-koryo-wrap::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:50px;height:20px;background:#ffffff;border-radius:50%;}
+.hero-koryo{width:120px;height:120px;object-fit:contain;animation:float 3s ease-in-out infinite;position:relative;z-index:2;}
+.hero h1{font-family:'Gmarket Sans',sans-serif;font-size:20px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:6px;}
+.hero h1 span{color:var(--yellow);}
+.hero p{font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.6;}
+.hero-chips{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:11px;}
+.hero-chip{background:rgba(255,255,255,.15);color:#fff;font-size:10.5px;font-weight:600;padding:4px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.25);}
+.start-btn{margin-top:14px;background:linear-gradient(135deg,var(--orange),var(--orange-l));color:#fff;border:none;padding:12px 34px;border-radius:99px;font-family:'Gmarket Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(255,107,0,.35);transition:all .2s;min-height:44px;}
+.start-btn:hover{transform:translateY(-2px);}
+
+/* ── CARDS & QUESTIONS ── */
+.section-card{background:#fff;border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:var(--shadow);border:1.5px solid var(--border);}
+.section-header{display:flex;align-items:center;gap:9px;margin-bottom:14px;padding-bottom:11px;border-bottom:2px dashed #F0F2F7;}
+.section-num{background:linear-gradient(135deg,var(--navy),var(--navy-l));color:#fff;font-family:'Gmarket Sans',sans-serif;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap;}
+.section-title{font-family:'Gmarket Sans',sans-serif;font-size:14px;font-weight:700;color:var(--navy);}
+.section-hint{display:flex;align-items:center;gap:8px;background:var(--orange-pale);border:1.5px solid #FFD4A8;border-radius:11px;padding:8px 12px;margin-bottom:13px;font-size:11.5px;color:#92400E;font-weight:500;}
+.section-hint img{width:38px;flex-shrink:0;mix-blend-mode:multiply;}
+.question-block{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--gray-l);}
+.question-block:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.q-label{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;color:var(--orange);background:var(--orange-pale);padding:2px 7px;border-radius:5px;margin-bottom:5px;}
+.q-label .req-mark{color:var(--red);margin-left:3px;font-size:12px;}
+.q-text{font-size:14px;font-weight:700;color:#111827;line-height:1.55;margin-bottom:3px;}
+.q-note{font-size:11px;color:var(--gray);margin-bottom:9px;}
+
+/* ── OPTIONS ── */
+.options-list{display:flex;flex-direction:column;gap:6px;}
+.options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;}
+@media(max-width:380px){.options-grid{grid-template-columns:1fr;}}
+.opt-item{display:flex;align-items:center;gap:9px;padding:10px 13px;border:1.5px solid var(--border);border-radius:11px;cursor:pointer;transition:all .15s;background:#fff;-webkit-tap-highlight-color:transparent;min-height:44px;}
+.opt-item:hover,.opt-item:active{border-color:var(--orange-l);background:var(--orange-pale);}
+.opt-item.selected{border-color:var(--orange);background:var(--orange-pale);box-shadow:0 0 0 3px rgba(255,107,0,.09);}
+.opt-circle{width:18px;height:18px;border:2px solid var(--border);border-radius:50%;flex-shrink:0;position:relative;transition:all .15s;}
+.opt-circle::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#fff;border-radius:50%;opacity:0;transition:opacity .15s;}
+.opt-item.selected .opt-circle{background:var(--orange);border-color:var(--orange);}
+.opt-item.selected .opt-circle::after{opacity:1;}
+.opt-square{width:18px;height:18px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;font-weight:700;}
+.opt-item.selected .opt-square{background:var(--orange);border-color:var(--orange);color:#fff;}
+.opt-item.selected .opt-square::after{content:'✓';}
+.opt-square::after{content:'';}
+.opt-text{font-size:13px;color:#374151;flex:1;line-height:1.4;}
+
+/* 기타 입력 */
+.other-wrap{display:none;margin-top:7px;margin-left:27px;}
+.other-wrap.show{display:block;}
+.other-input{width:100%;padding:8px 12px;border:1.5px solid var(--orange);border-radius:9px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#374151;background:#fff;}
+.other-input:focus{outline:none;box-shadow:0 0 0 3px rgba(255,107,0,.10);}
+
+/* ── TABLE ── */
+.table-q{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px;}
+.table-q th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left;font-weight:600;font-size:11.5px;}
+.table-q th:first-child{border-radius:9px 0 0 0;}
+.table-q th:last-child{border-radius:0 9px 0 0;}
+.table-q td{padding:9px 10px;border-bottom:1px solid var(--gray-l);vertical-align:top;}
+.table-q tr:last-child td{border-bottom:none;}
+.table-q tr:nth-child(even) td{background:#FAFAFA;}
+.row-label{font-weight:600;color:var(--navy);font-size:12px;white-space:nowrap;min-width:80px;}
+.inline-opts{display:flex;flex-wrap:wrap;gap:4px;}
+.inline-opt{display:flex;align-items:center;gap:4px;padding:5px 9px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;font-size:11.5px;transition:all .13s;background:#fff;white-space:nowrap;-webkit-tap-highlight-color:transparent;min-height:36px;}
+.inline-opt:hover,.inline-opt:active{border-color:var(--orange-l);background:var(--orange-pale);}
+.inline-opt.selected{border-color:var(--orange);background:var(--orange-pale);font-weight:700;color:var(--orange);}
+.inline-dot{width:11px;height:11px;border:2px solid #CBD5E1;border-radius:50%;flex-shrink:0;transition:all .13s;}
+.inline-opt.selected .inline-dot{background:var(--orange);border-color:var(--orange);}
+
+/* ── TEXT INPUT ── */
+.text-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:11px;font-size:13px;font-family:'Noto Sans KR',sans-serif;color:#374151;background:#fff;transition:border-color .2s;}
+.text-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,107,0,.09);}
+textarea.text-input{resize:vertical;min-height:90px;margin-top:5px;}
+.conditional{display:none;}
+.conditional.show{display:block;margin-top:9px;}
+
+/* ── SUBMIT & COMPLETE ── */
+.submit-wrap{text-align:center;margin-top:22px;}
+.submit-btn{background:linear-gradient(135deg,var(--orange),var(--orange-l));color:#fff;border:none;padding:14px 44px;border-radius:99px;font-family:'Gmarket Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 7px 22px rgba(255,107,0,.33);transition:all .22s;min-height:48px;width:100%;max-width:320px;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,107,0,.43);}
+#page-complete{display:none;}
+#page-complete.active{display:block;}
+.complete-wrap{text-align:center;padding:50px 20px 100px;max-width:680px;margin:0 auto;}
+.complete-koryo{width:120px;margin:0 auto 18px;mix-blend-mode:multiply;animation:float 3s ease-in-out infinite;}
+.complete-title{font-family:'Gmarket Sans',sans-serif;font-size:24px;font-weight:700;color:var(--navy);margin-bottom:9px;}
+.complete-title span{color:var(--orange);}
+.complete-desc{font-size:13.5px;color:var(--gray);line-height:1.8;}
+.toast{position:fixed;bottom:50px;left:50%;transform:translateX(-50%) translateY(18px);background:var(--navy);color:#fff;padding:9px 18px;border-radius:99px;font-size:12.5px;font-weight:600;opacity:0;transition:all .3s;z-index:300;white-space:nowrap;max-width:90vw;text-align:center;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:480px){
+  .hero h1{font-size:18px;}
+  .section-title{font-size:13.5px;}
+  .q-text{font-size:13.5px;}
+  .table-q{font-size:11.5px;}
+  .row-label{min-width:70px;font-size:11px;}
+  .inline-opt{font-size:11px;padding:4px 8px;}
+  .btn-next,.btn-prev{font-size:12.5px;padding:11px 18px;}
+}
+</style>
+</head>
+<body>
+
+<div class="sticky-header">
+  <div class="header-top">
+    <div class="header-title">🗺️ 2026 화성시 통상지원사업 설문조사</div>
+    <div class="header-badge" id="badge-text">0% 완료</div>
+  </div>
+  <div class="section-dots">
+    <div class="section-dot active" id="dot-0"></div><div class="section-dot" id="dot-1"></div>
+    <div class="section-dot" id="dot-2"></div><div class="section-dot" id="dot-3"></div>
+    <div class="section-dot" id="dot-4"></div><div class="section-dot" id="dot-5"></div>
+    <div class="section-dot" id="dot-6"></div><div class="section-dot" id="dot-7"></div>
+    <div class="section-dot" id="dot-8"></div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width: 0%;"></div></div>
+  <div class="progress-text">
+    <span><span class="dc" id="done-count">0</span>개 문항 응답</span>
+    <span class="pct" id="pct-text">0%</span>
+  </div>
+</div>
+
+<div class="koryo-wrap" id="koryo-wrap">
+  <div class="speech-bubble" id="speech-bubble">안녕하세요! 코리요예요 🐾<br>설문에 참여해 주셔서 감사해요!</div>
+  <div class="koryo-circle" id="koryo-circle" onclick="koryoClick()">
+    <img id="koryo-img" class="koryo-img" src="https://via.placeholder.com/70x70?text=Koryo" alt="코리요">
+  </div>
+</div>
+
+<div class="cheer-bar">
+  <span class="cheer-text show" id="cheer-text">설문 완료하시면 선물 같은 보람이 🎁</span>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="page active" id="page-0">
+  <div class="hero">
+    <div class="hero-koryo-wrap">
+      <img class="hero-koryo" src="https://via.placeholder.com/120x120?text=Koryo" alt="코리요">
+    </div>
+    <h1>2026 화성시<br><span>통상지원사업</span> 설문조사</h1>
+    <p>귀사의 소중한 의견이 화성시 수출지원사업을<br>더욱 발전시키는 데 큰 힘이 됩니다.</p>
+    <div class="hero-chips">
+      <div class="hero-chip">📋 설문 작성</div>
+      <div class="hero-chip">⏱ 약 5분 소요</div>
+      <div class="hero-chip">🔒 익명 보장</div>
+    </div>
+    <button class="start-btn" onclick="goPage(1)">설문 시작하기 →</button>
+  </div>
+</div>
+
+<div class="page" id="page-1">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 1</span><span class="section-title">응답 기업 기본현황</span></div>
+    <div class="section-hint">기업 정보를 알려주세요. 모든 답변은 통계 목적으로만 활용됩니다!</div>
+
+    <div class="question-block" data-q="q1" data-required="radio">
+      <div class="q-label">Q1 <span class="req-mark">*필수</span></div>
+      <div class="q-text">귀사의 주요 업종을 선택해 주십시오.</div>
+      <div class="q-note">※ 단수 선택</div>
+      <div class="options-list" data-type="radio" data-qid="q1">
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">기계·부품·소재</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">전기·전자·반도체</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">자동차부품</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">의료기기·의약품</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">화학·플라스틱</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">대중소비재</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1')"><div class="opt-circle"></div><span class="opt-text">IT·소프트웨어</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q1',true)"><div class="opt-circle"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q1"><input class="other-input" placeholder="업종을 직접 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q1"></div>
+    </div>
+
+    <div class="question-block" data-q="q2" data-required="inline-all">
+      <div class="q-label">Q2 <span class="req-mark">*필수</span></div>
+      <div class="q-text">귀사의 규모를 선택해 주십시오.</div>
+      <div class="q-note">※ 각 항목 단수 선택</div>
+      <table class="table-q"><thead><tr><th>구분</th><th>선택</th></tr></thead><tbody>
+        <tr><td class="row-label">종업원 수</td><td><div class="inline-opts" data-type="radio" data-qid="q2a">
+          <div class="inline-opt" onclick="selectInline(this,'q2a')"><div class="inline-dot"></div>10인 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2a')"><div class="inline-dot"></div>10~30인 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2a')"><div class="inline-dot"></div>30~100인 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2a')"><div class="inline-dot"></div>100인 이상</div>
+        </div></td></tr>
+        <tr><td class="row-label">연간 매출액</td><td><div class="inline-opts" data-type="radio" data-qid="q2b">
+          <div class="inline-opt" onclick="selectInline(this,'q2b')"><div class="inline-dot"></div>10억 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2b')"><div class="inline-dot"></div>10~50억 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2b')"><div class="inline-dot"></div>50~100억 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2b')"><div class="inline-dot"></div>100억 이상</div>
+        </div></td></tr>
+        <tr><td class="row-label">수출비중</td><td><div class="inline-opts" data-type="radio" data-qid="q2c">
+          <div class="inline-opt" onclick="selectInline(this,'q2c')"><div class="inline-dot"></div>10% 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2c')"><div class="inline-dot"></div>10~30%</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2c')"><div class="inline-dot"></div>30~50%</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2c')"><div class="inline-dot"></div>50~70%</div>
+          <div class="inline-opt" onclick="selectInline(this,'q2c')"><div class="inline-dot"></div>70% 이상</div>
+        </div></td></tr>
+      </tbody></table>
+      <div class="required-error" id="err-q2"></div>
+    </div>
+
+    <div class="question-block" data-q="q3" data-required="inline-q3a">
+      <div class="q-label">Q3 <span class="req-mark">*수출 경력 필수</span></div>
+      <div class="q-text">귀사의 수출 경력과 주요 수출 방식을 선택해 주십시오.</div>
+      <div class="q-note">※ 각 항목 단수 선택</div>
+      <table class="table-q"><thead><tr><th>구분</th><th>선택</th></tr></thead><tbody>
+        <tr><td class="row-label">수출 경력 (필수)</td><td><div class="inline-opts" data-type="radio" data-qid="q3a">
+          <div class="inline-opt" onclick="selectInline(this,'q3a')"><div class="inline-dot"></div>없음(준비 중)</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3a')"><div class="inline-dot"></div>3년 미만</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3a')"><div class="inline-dot"></div>3~7년</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3a')"><div class="inline-dot"></div>7~15년</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3a')"><div class="inline-dot"></div>15년 이상</div>
+        </div></td></tr>
+        <tr><td class="row-label">수출 방식 (선택)</td><td><div class="inline-opts" data-type="radio" data-qid="q3b">
+          <div class="inline-opt" onclick="selectInline(this,'q3b')"><div class="inline-dot"></div>직접수출</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3b')"><div class="inline-dot"></div>간접수출(에이전트)</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3b')"><div class="inline-dot"></div>OEM·ODM</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3b')"><div class="inline-dot"></div>온라인 플랫폼</div>
+          <div class="inline-opt" onclick="selectInline(this,'q3b')"><div class="inline-dot"></div>해외 법인·지사</div>
+        </div></td></tr>
+      </tbody></table>
+      <div class="required-error" id="err-q3"></div>
+    </div>
+
+    <div class="question-block" data-q="q4" data-required="checkbox">
+      <div class="q-label">Q4 <span class="req-mark">*필수</span></div>
+      <div class="q-text">귀사의 현재 주요 수출지역을 선택해 주십시오.</div>
+      <div class="q-note">※ 복수 선택 가능</div>
+      <div class="options-grid" data-type="checkbox" data-qid="q4">
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">① 북미 (미국·캐나다)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">② 중국</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">③ 일본</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">④ 베트남</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑤ 동남아 (베트남 제외)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑥ 서남아 (인도·파키스탄 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑦ 중동 (UAE·사우디 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑧ 유럽</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑨ CIS (러시아·우즈벡 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑩ 중남미</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑪ 아프리카</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')"><div class="opt-square"></div><span class="opt-text">⑫ 오세아니아</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q4')" style="grid-column:1/-1"><div class="opt-square"></div><span class="opt-text">⑬ 현재 수출 없음</span></div>
+      </div>
+      <div class="required-error" id="err-q4"></div>
+    </div>
+
+    <div class="question-block" data-q="q5" data-required="radio">
+      <div class="q-label">Q5 <span class="req-mark">*필수</span></div>
+      <div class="q-text">해외 현지법인, 판매법인, 합작회사 등 해외 거점을 보유하고 있습니까?</div>
+      <div class="q-note">※ 단수 선택</div>
+      <div class="options-list" data-type="radio" data-qid="q5">
+        <div class="opt-item" onclick="selectOpt(this,'q5');showCond('q5-sub',true)"><div class="opt-circle"></div><span class="opt-text">보유하고 있음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q5');showCond('q5-sub',false)"><div class="opt-circle"></div><span class="opt-text">보유하고 있지 않음</span></div>
+      </div>
+      <div class="conditional" id="q5-sub">
+        <div class="q-note" style="margin-top:9px;margin-bottom:5px;">▸ Q5-1. 진출 국가 및 지역을 기재해 주십시오. <span style="color:var(--red); font-weight:bold;">*필수</span></div>
+        <input class="text-input" id="q5-1" placeholder="예: 베트남 하노이, 미국 캘리포니아" oninput="updateProgress()">
+      </div>
+      <div class="required-error" id="err-q5"></div>
+    </div>
+
+    <div class="slide-nav">
+      <div></div>
+      <button class="btn-next" onclick="tryNext(1,2)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-2">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 2</span><span class="section-title">수출 현황 및 수출 역량</span></div>
+    <div class="section-hint">현재 수출 상황을 솔직하게 알려주세요!</div>
+
+    <div class="question-block" data-q="q6" data-required="radio">
+      <div class="q-label">Q6 <span class="req-mark">*필수</span></div>
+      <div class="q-text">현재 귀사의 전년 대비 수출실적은 어떠합니까?</div>
+      <div class="q-note">※ 단수 선택</div>
+      <div class="options-list" data-type="radio" data-qid="q6">
+        <div class="opt-item" onclick="selectOpt(this,'q6')"><div class="opt-circle"></div><span class="opt-text">📈 증가하였음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q6')"><div class="opt-circle"></div><span class="opt-text">➡️ 전년과 비슷한 수준임</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q6')"><div class="opt-circle"></div><span class="opt-text">📉 감소하였음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q6')"><div class="opt-circle"></div><span class="opt-text">⬜ 현재 수출 실적 없음</span></div>
+      </div>
+      <div class="required-error" id="err-q6"></div>
+    </div>
+
+    <div class="question-block" data-q="q7" data-required="radio">
+      <div class="q-label">Q7 <span class="req-mark">*필수</span></div>
+      <div class="q-text">최근 1년간(2025년 기준) 수출실적 규모를 선택해 주십시오.</div>
+      <div class="q-note">※ 단수 선택</div>
+      <div class="options-list" data-type="radio" data-qid="q7">
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">없음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">10만불 미만</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">10만불 ~ 50만불</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">50만불 ~ 200만불</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">200만불 ~ 500만불</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">500만불 ~ 1천만불</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">1천만불 ~ 2천만불</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q7')"><div class="opt-circle"></div><span class="opt-text">2천만불 이상</span></div>
+      </div>
+      <div class="required-error" id="err-q7"></div>
+    </div>
+
+    <div class="question-block" data-q="q8" data-required="inline-all">
+      <div class="q-label">Q8 <span class="req-mark">*필수</span></div>
+      <div class="q-text">귀사의 수출 전담인력 현황을 선택해 주십시오.</div>
+      <div class="q-note">※ 각 항목 단수 선택</div>
+      <table class="table-q"><thead><tr><th>구분</th><th>선택</th></tr></thead><tbody>
+        <tr><td class="row-label">인력 유형</td><td><div class="inline-opts" data-type="radio" data-qid="q8a">
+          <div class="inline-opt" onclick="selectInline(this,'q8a')"><div class="inline-dot"></div>없음</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8a')"><div class="inline-dot"></div>전담 부서</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8a')"><div class="inline-dot"></div>전담 담당자</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8a')"><div class="inline-dot"></div>겸직 담당자</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8a')"><div class="inline-dot"></div>대표자 직접</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8a')"><div class="inline-dot"></div>외부 에이전트</div>
+        </div></td></tr>
+        <tr><td class="row-label">전담 인원</td><td><div class="inline-opts" data-type="radio" data-qid="q8b">
+          <div class="inline-opt" onclick="selectInline(this,'q8b')"><div class="inline-dot"></div>없음</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8b')"><div class="inline-dot"></div>1명</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8b')"><div class="inline-dot"></div>2명</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8b')"><div class="inline-dot"></div>3명</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8b')"><div class="inline-dot"></div>4명</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8b')"><div class="inline-dot"></div>5명 이상</div>
+        </div></td></tr>
+        <tr><td class="row-label">인력 충분성</td><td><div class="inline-opts" data-type="radio" data-qid="q8c">
+          <div class="inline-opt" onclick="selectInline(this,'q8c')"><div class="inline-dot"></div>충분함</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8c')"><div class="inline-dot"></div>다소 부족</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8c')"><div class="inline-dot"></div>지장 있음</div>
+          <div class="inline-opt" onclick="selectInline(this,'q8c')"><div class="inline-dot"></div>해당 없음</div>
+        </div></td></tr>
+      </tbody></table>
+      <div class="required-error" id="err-q8"></div>
+    </div>
+
+    <div class="slide-nav">
+      <button class="btn-prev" onclick="goPage(1)">← 이전</button>
+      <button class="btn-next" onclick="tryNext(2,3)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-3">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 3</span><span class="section-title">해외시장 진출 의향 및 지원 필요 분야</span></div>
+    <div class="section-hint">앞으로 진출하고 싶은 곳은 어디인가요? 🌍</div>
+
+    <div class="question-block" data-q="q10" data-required="checkbox">
+      <div class="q-label">Q10 <span class="req-mark">*필수</span></div>
+      <div class="q-text">향후 중점적으로 진출을 희망하는 해외 시장은 어디입니까?</div>
+      <div class="q-note">※ 복수 선택 (해당 없음 선택 시 사유 필수)</div>
+      <div class="options-grid" data-type="checkbox" data-qid="q10">
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">① 북미 (미국·캐나다)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">② 중국</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">③ 일본</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">④ 베트남</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑤ 동남아 (베트남 제외)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑥ 서남아 (인도·파키스탄 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑦ 중동 (UAE·사우디 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑧ 유럽</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑨ CIS (러시아·우즈벡 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑩ 중남미</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑪ 아프리카</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10')"><div class="opt-square"></div><span class="opt-text">⑫ 오세아니아</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q10',true)" style="grid-column:1/-1"><div class="opt-square"></div><span class="opt-text">⑬ 해당 없음</span></div>
+      </div>
+      <div class="other-wrap" id="other-q10"><input class="other-input" placeholder="수출을 희망하지 않는 이유를 간단히 작성해 주십시오." oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q10"></div>
+    </div>
+
+    <div class="question-block" data-q="q11" data-required="checkbox">
+      <div class="q-label">Q11 <span class="req-mark">*필수</span></div>
+      <div class="q-text">현재 수출 활동에서 가장 크게 느끼는 실무 애로사항은 무엇입니까?</div>
+      <div class="q-note">※ 복수 선택 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q11">
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">해외 바이어 발굴 및 매칭 어려움</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">해외 마케팅 비용 부담</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">수출 물류비 부담</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">해외 규격·인증·인허가 문제</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">수출통관 절차 문제</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">현지 시장 정보 부족</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">해외 영업 전담 인력 부족</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11')"><div class="opt-square"></div><span class="opt-text">사후관리 어려움</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q11',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q11"><input class="other-input" placeholder="기타 애로사항을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q11"></div>
+    </div>
+
+    <div class="slide-nav">
+      <button class="btn-prev" onclick="goPage(2)">← 이전</button>
+      <button class="btn-next" onclick="tryNext(3,4)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-4">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 4</span><span class="section-title">수출지원기관 이용 현황</span></div>
+    <div class="section-hint">어떤 기관을 이용하고 계신지 알려주세요!</div>
+
+    <div class="question-block" data-q="q13" data-required="checkbox">
+      <div class="q-label">Q13 <span class="req-mark">*필수</span></div>
+      <div class="q-text">현재 수출 관련 지원을 어느 기관에서 받고 있습니까?</div>
+      <div class="q-note">※ 복수 선택 가능 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q13">
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">화성시수출업무지원센터</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">화성상공회의소</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">KOTRA (대한무역투자진흥공사)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">한국무역협회</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">중소벤처기업진흥공단 (중진공)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">경기도 경제과학진흥원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">화성산업진흥원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13')"><div class="opt-square"></div><span class="opt-text">현재 이용 중인 기관이 없음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q13',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q13"><input class="other-input" placeholder="이용 중인 다른 기관을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q13"></div>
+    </div>
+
+    <div class="question-block" data-q="q14" data-required="radio">
+      <div class="q-label">Q14 <span class="req-mark">*필수</span></div>
+      <div class="q-text">화성시수출업무지원센터의 수출지원사업을 이용한 경험이 있습니까?</div>
+      <div class="q-note">※ 선택에 따라 이후 질문이 달라집니다</div>
+      <div class="options-list" data-type="radio" data-qid="q14">
+        <div class="opt-item" onclick="selectOpt(this,'q14');branch='A'"><div class="opt-circle"></div><span class="opt-text">① 이용 경험 있음 → Q15~Q18 등 응답</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q14');branch='B'"><div class="opt-circle"></div><span class="opt-text">② 이용 경험 없음 → Q19~Q20 응답</span></div>
+      </div>
+      <div class="required-error" id="err-q14"></div>
+    </div>
+
+    <div class="slide-nav">
+      <button class="btn-prev" onclick="goPage(3)">← 이전</button>
+      <button class="btn-next" onclick="tryNext(4, branch==='A'?5:6)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-5">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 5-A</span><span class="section-title">수출지원사업 이용 경험 기업</span></div>
+    <div class="section-hint">이용 경험이 있는 기업만 응답해 주세요 (Q15~Q18, Q21)</div>
+
+    <div class="question-block" data-q="q15a" data-required="checkbox">
+      <div class="q-label">Q15 <span class="req-mark">*필수</span></div>
+      <div class="q-text">화성시수출업무지원사업을 처음 알게 된 경로는 무엇입니까?</div>
+      <div class="q-note">※ 복수 선택 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q15a">
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">화성시수출업무지원센터 직접 연락</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">화성시청 공지·공문</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">화성상공회의소 안내</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">지인·동종업체 추천</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">포털·SNS 검색</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">이메일·문자 안내</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a')"><div class="opt-square"></div><span class="opt-text">기억나지 않음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q15a',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q15a"><input class="other-input" placeholder="기타 경로를 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q15a"></div>
+    </div>
+
+    <div class="question-block" data-q="q16" data-required="radio">
+      <div class="q-label">Q16 <span class="req-mark">*필수</span></div>
+      <div class="q-text">화성시 수출지원사업이 귀사의 수출 활동에 얼마나 도움이 되었습니까?</div>
+      <div class="q-note">※ 단수 선택</div>
+      <div class="options-list" data-type="radio" data-qid="q16">
+        <div class="opt-item" onclick="selectOpt(this,'q16')"><div class="opt-circle"></div><span class="opt-text">⭐⭐⭐ 매우 도움이 되었음 (수출 성과에 직접 기여)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q16')"><div class="opt-circle"></div><span class="opt-text">⭐⭐ 도움이 되었음 (간접적으로 기여)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q16')"><div class="opt-circle"></div><span class="opt-text">⭐ 보통 수준이었음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q16',true)"><div class="opt-circle"></div><span class="opt-text">기대에 비해 미흡하였음</span></div>
+      </div>
+      <div class="other-wrap" id="other-q16"><input class="other-input" placeholder="어떤 부분이 기대에 비해 미흡하였는지 간단히 작성해 주십시오." oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q16"></div>
+    </div>
+
+    <div class="question-block" data-q="q21" data-required="checkbox">
+      <div class="q-label">Q21 <span class="req-mark">*필수</span></div>
+      <div class="q-text">화성시 수출지원사업 이용 과정에서 가장 만족하신 부분은 무엇입니까?</div>
+      <div class="q-note">※ 복수 선택 가능 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q21">
+        <div class="opt-item" onclick="selectOpt(this,'q21')"><div class="opt-square"></div><span class="opt-text">수출 관련 정보 제공의 충분성</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q21')"><div class="opt-square"></div><span class="opt-text">지원사업 안내의 적시성</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q21')"><div class="opt-square"></div><span class="opt-text">담당자의 전문성·실무 역량</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q21')"><div class="opt-square"></div><span class="opt-text">담당자의 친절도 및 응대</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q21')"><div class="opt-square"></div><span class="opt-text">기업 특성에 맞는 맞춤 지원 수준</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q21')"><div class="opt-square"></div><span class="opt-text">신청 절차의 편리성·접근성</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q21',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q21"><input class="other-input" placeholder="기타 만족 사항을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q21"></div>
+    </div>
+
+    <div class="question-block" data-q="q17" data-required="checkbox">
+      <div class="q-label">Q17 <span class="req-mark">*필수</span></div>
+      <div class="q-text">더욱 효과적으로 활용하기 위해 개선이 필요한 부분은 무엇입니까?</div>
+      <div class="q-note">※ 복수 선택 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q17">
+        <div class="opt-item" onclick="selectOpt(this,'q17')"><div class="opt-square"></div><span class="opt-text">수혜 횟수 제한 확대</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q17')"><div class="opt-square"></div><span class="opt-text">자부담 비용 경감</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q17')"><div class="opt-square"></div><span class="opt-text">사업 안내 및 홍보 강화</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q17')"><div class="opt-square"></div><span class="opt-text">신청 절차 간소화</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q17')"><div class="opt-square"></div><span class="opt-text">업종·수출 방식에 맞는 맞춤형 사업 신설</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q17',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q17"><input class="other-input" placeholder="기타 개선 사항을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q17"></div>
+    </div>
+
+    <div class="slide-nav">
+      <button class="btn-prev" onclick="goPage(4)">← 이전</button>
+      <button class="btn-next" onclick="tryNext(5,7)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-6">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 5-B</span><span class="section-title">수출지원사업 미이용 기업</span></div>
+    <div class="section-hint">이용 경험이 없는 기업만 응답해 주세요 (Q19~Q20)</div>
+
+    <div class="question-block" data-q="q19" data-required="checkbox">
+      <div class="q-label">Q19 <span class="req-mark">*필수</span></div>
+      <div class="q-text">화성시 수출지원사업을 이용하지 않으신 주된 이유는 무엇입니까?</div>
+      <div class="q-note">※ 복수 선택</div>
+      <div class="options-list" data-type="checkbox" data-qid="q19">
+        <div class="opt-item" onclick="selectOpt(this,'q19')"><div class="opt-square"></div><span class="opt-text">지원사업이 운영된다는 사실을 알지 못하였음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q19')"><div class="opt-square"></div><span class="opt-text">귀사 업종·상황에 적합한 사업이 없다고 판단</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q19')"><div class="opt-square"></div><span class="opt-text">신청 자격 요건을 충족하지 못하였음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q19')"><div class="opt-square"></div><span class="opt-text">신청 절차 또는 자부담 비용이 부담되었음</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q19')"><div class="opt-square"></div><span class="opt-text">KOTRA·중진공 등 다른 기관의 사업을 이미 이용 중</span></div>
+      </div>
+      <div class="required-error" id="err-q19"></div>
+    </div>
+
+    <div class="question-block" data-q="q20" data-required="checkbox">
+      <div class="q-label">Q20 <span class="req-mark">*필수</span></div>
+      <div class="q-text">향후 화성시 수출지원사업 참여를 위해 가장 필요한 개선 사항은 무엇입니까?</div>
+      <div class="q-note">※ 복수 선택 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q20">
+        <div class="opt-item" onclick="selectOpt(this,'q20')"><div class="opt-square"></div><span class="opt-text">지원사업 안내 및 홍보 강화</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q20')"><div class="opt-square"></div><span class="opt-text">신청 자격 요건 완화 (OEM·서비스업·소기업 포함 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q20')"><div class="opt-square"></div><span class="opt-text">지원 금액·규모 확대</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q20')"><div class="opt-square"></div><span class="opt-text">신청 절차 간소화</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q20')"><div class="opt-square"></div><span class="opt-text">귀사 업종에 맞는 맞춤형 신규 사업 신설</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q20',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q20"><input class="other-input" placeholder="기타 개선 사항을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q20"></div>
+    </div>
+
+    <div class="slide-nav">
+      <button class="btn-prev" onclick="goPage(4)">← 이전</button>
+      <button class="btn-next" onclick="tryNext(6,7)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-7">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 6</span><span class="section-title">지원사업 개선 및 확대 방향</span></div>
+    <div class="section-hint">어떤 지원이 더 필요하신가요? 💡 (모든 기업 응답)</div>
+
+    <div class="question-block" data-q="q22" data-required="checkbox">
+      <div class="q-label">Q22 <span class="req-mark">*필수</span></div>
+      <div class="q-text">확대되었으면 하는 사업을 선택해 주세요.</div>
+      <div class="q-note">※ 복수 선택 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q22">
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">수출 기업 맞춤형 지원 (외국어 통번역·홍보물 제작 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">수출 컨설팅 (수출절차, 인증, 통관, 계약, 사후관리 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">해외 시장개척단 (현지 바이어 상담 및 시장조사)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">국제전시회 개별참가 지원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">국제전시회 단체관 지원 (화성시 공동관)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">국제전시회 참관단 지원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">수출 파트너 활용 (해외 파트너를 통한 바이어 발굴)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">해외 바이어 초청 수출 상담회</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22')"><div class="opt-square"></div><span class="opt-text">수출 물류비 지원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q22',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q22"><input class="other-input" placeholder="기타 확대 희망 사업을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q22"></div>
+    </div>
+
+    <div class="question-block" data-q="q23" data-required="checkbox">
+      <div class="q-label">Q23 <span class="req-mark">*필수</span></div>
+      <div class="q-text">신규 개설되었으면 하는 사업을 선택해 주세요.</div>
+      <div class="q-note">※ 복수 선택 (기타 선택 시 작성 필수)</div>
+      <div class="options-list" data-type="checkbox" data-qid="q23">
+        <div class="opt-item" onclick="selectOpt(this,'q23')"><div class="opt-square"></div><span class="opt-text">온라인 마케팅·이커머스 플랫폼 입점 지원 (아마존·알리바바 등)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q23')"><div class="opt-square"></div><span class="opt-text">해외 규격·인증 취득비용 지원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q23')"><div class="opt-square"></div><span class="opt-text">수출 패키지 지원 (인증+전시+마케팅 묶음)</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q23')"><div class="opt-square"></div><span class="opt-text">해외 비즈니스 출장비 지원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q23')"><div class="opt-square"></div><span class="opt-text">AI 기반 바이어 정보 및 시장조사 제공</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q23')"><div class="opt-square"></div><span class="opt-text">SNS 및 링크드인 해외 광고 지원</span></div>
+        <div class="opt-item" onclick="selectOpt(this,'q23',true)"><div class="opt-square"></div><span class="opt-text">기타</span></div>
+      </div>
+      <div class="other-wrap" id="other-q23"><input class="other-input" placeholder="기타 신규 사업을 입력해 주세요" oninput="updateProgress()"></div>
+      <div class="required-error" id="err-q23"></div>
+    </div>
+
+    <div class="slide-nav">
+      <button class="btn-prev" onclick="goPage(branch==='A'?5:6)">← 이전</button>
+      <button class="btn-next" onclick="tryNext(7,8)">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-8">
+  <div class="section-card">
+    <div class="section-header"><span class="section-num">영역 7</span><span class="section-title">자유 의견 및 이메일</span></div>
+    <div class="section-hint">마지막이에요! 자유롭게 의견을 남겨주세요 🎉</div>
+    
+    <div class="question-block" data-q="q25">
+      <div class="q-label">Q25 <span style="font-weight:400;color:var(--gray);font-size:10px;">선택</span></div>
+      <div class="q-text">화성시에서 도입하거나 개선하면 좋겠다고 생각하시는 사업·정책·서비스가 있으면 자유롭게 기재해 주십시오.</div>
+      <textarea class="text-input" id="q25-text" placeholder="자유롭게 작성해 주세요 :)" rows="4" oninput="updateProgress()"></textarea>
+    </div>
+
+    <div class="question-block" data-q="email" style="border-bottom:none; margin-bottom:0;">
+      <div class="q-label">이메일 주소 <span style="font-weight:400;color:var(--gray);font-size:10px;">선택</span></div>
+      <div class="q-text">이메일 주소를 기재해 주시면 향후 화성시수출업무지원센터 사업안내 메일을 보다 빠르게 받아보실 수 있습니다.</div>
+      <input type="email" class="text-input" id="email-input" placeholder="예: admin@company.com" oninput="updateProgress()">
+    </div>
+
+    <div class="submit-wrap">
+      <button class="submit-btn" onclick="submitForm()">✅ 설문 제출하기</button>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--gray);">모든 응답은 통계 목적으로만 활용되며, 익명으로 처리됩니다.</div>
+    </div>
+    <div class="slide-nav" style="margin-top:16px;"><button class="btn-prev" onclick="goPage(7)">← 이전</button><div></div></div>
+  </div>
+</div>
+
+<div id="page-complete">
+  <div class="complete-wrap">
+    <div class="complete-title">설문 완료! <span>감사합니다</span> 🎉</div>
+    <p class="complete-desc">귀사의 소중한 의견이 잘 접수되었습니다.<br>화성시 수출지원사업 발전에 큰 도움이 됩니다.<br><br>
+    <strong style="color:var(--navy);">화성시 수출업무지원센터</strong>가<br>귀사의 글로벌 성장을 응원합니다! 🌍</p>
+  </div>
+</div>
+
+<script>
+const PAGE_BUBBLES=[
+  ['안녕하세요! 코리요예요 🐾<br>설문에 참여해 주셔서 감사해요!'],
+  ['기업 정보부터 알려주세요 😊','어렵지 않아요, 체크만 하면 돼요! ✅'],
+  ['수출 현황 파악 중이에요~ 📊','솔직하게 답해주셔도 괜찮아요!'],
+  ['진출하고 싶은 시장이 있나요? 🌍','꿈은 크게! 여러 개 선택해도 돼요 🚀'],
+  ['어떤 기관을 이용하시나요? 🏢','Q14 선택에 따라 다음 질문이 달라져요!'],
+  ['이용 경험 구간이에요! 🗒️','꼼꼼하게 답해주시면 감사해요~'],
+  ['이유를 알려주시면 큰 도움이 돼요!','소중한 의견이에요 💬'],
+  ['어떤 지원이 더 필요하신가요? 💡','여러분의 의견이 정책이 됩니다!'],
+  ['마지막이에요! 거의 다 왔어요 🎊','이메일을 적어주시면 소식을 슝슝🚀 보내드려요!']
+];
+const cheerTexts=['화성시 기업의 글로벌 도약을 응원해요! 💪','거의 다 왔어요! 조금만 더 힘내세요 🔥','귀사의 의견이 화성시를 바꿉니다 🌟','설문 완료하시면 선물 같은 보람이 🎁','오늘도 수출 파이팅! 🚢','코리요가 응원하고 있어요! 🐾'];
+
+// 페이지별 검증 대상 문항 (모두 필수로 적용)
+const PAGE_REQUIRED = {
+  1: ['q1','q2','q3','q4','q5'],
+  2: ['q6','q7','q8'],
+  3: ['q10','q11'],
+  4: ['q13','q14'],
+  5: ['q15a','q16','q21','q17'], // Branch A (이용경험)
+  6: ['q19','q20'],              // Branch B (미이용)
+  7: ['q22','q23']
+};
+
+let currentPage=0, branch='A', cheerIdx=0, bubbleTimer;
+
+setInterval(()=>{
+  const el=document.getElementById('cheer-text');
+  if(!el) return;
+  el.classList.remove('show');
+  setTimeout(()=>{cheerIdx=(cheerIdx+1)%cheerTexts.length;el.textContent=cheerTexts[cheerIdx];el.classList.add('show');},400);
+},4000);
+
+function showBubble(html){
+  const b=document.getElementById('speech-bubble');
+  if(!b) return;
+  b.classList.remove('show');clearTimeout(bubbleTimer);
+  setTimeout(()=>{b.innerHTML=html;b.classList.add('show');bubbleTimer=setTimeout(()=>b.classList.remove('show'),5000);},200);
+}
+setTimeout(()=>showBubble(PAGE_BUBBLES[0][0]),800);
+
+function koryoClick(){
+  const circle=document.getElementById('koryo-circle');
+  if(!circle) return;
+  circle.classList.remove('bounce');void circle.offsetWidth;circle.classList.add('bounce');
+  circle.addEventListener('animationend',()=>circle.classList.remove('bounce'),{once:true});
+  const r=['으랏차차! 응원할게요 🐾','잘 하고 있어요! 💪','화이팅! 거의 다 왔어요~','코리요가 함께해요! 😊','빠이팅!! 🌟'];
+  showBubble(r[Math.floor(Math.random()*r.length)]);
+}
+
+// ── 필수 항목 검증 및 조건부 필수 로직 ──
+function validatePage(pageNum) {
+  const required = PAGE_REQUIRED[pageNum];
+  if (!required) return true;
+
+  let allOk = true;
+
+  required.forEach(qid => {
+    const block = document.querySelector(`[data-q="${qid}"]`);
+    if (!block) return;
+    
+    const reqType = block.getAttribute('data-required');
+    let ok = false;
+    let textOk = true; // 조건부 서술형 입력 여부 확인
+
+    // 1. 선택 검증
+    if (reqType === 'radio') {
+      ok = !!block.querySelector('[data-type="radio"] .selected');
+    } else if (reqType === 'checkbox') {
+      ok = !!block.querySelector('[data-type="checkbox"] .selected');
+    } else if (reqType === 'inline-all') {
+      const groups = block.querySelectorAll('.inline-opts[data-qid]');
+      ok = [...groups].every(g => g.querySelector('.selected'));
+    } else if (reqType === 'inline-q3a') {
+      // Q3 수출경력(q3a)만 필수 검증
+      const q3aGroup = block.querySelector('.inline-opts[data-qid="q3a"]');
+      ok = !!q3aGroup.querySelector('.selected');
+    } else {
+      ok = true; // 기타
+    }
+
+    // 2. 조건부 텍스트 검증 (기타, 해당없음, 미흡 등 서술형 항목)
+    if (오케이)
